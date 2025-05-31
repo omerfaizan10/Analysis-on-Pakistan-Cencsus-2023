@@ -9,7 +9,8 @@ def load_data():
     return pd.read_csv('merged.csv')
 
 df = load_data()
-
+if 'literacy_rate' not in df.columns:
+    df['literacy_rate'] = (df['total_schools'] / df['population_2023']) * 100
 # Initialize session state for navigation
 if 'page' not in st.session_state:
     st.session_state.page = 'welcome'
@@ -152,8 +153,7 @@ elif st.session_state.page == 'dashboard':
     )
 
     st.plotly_chart(fig)
-    if 'literacy_rate' not in df.columns:
-        df['literacy_rate'] = (df['total_schools'] / df['population_2023']) * 100
+   
 
 # Drop rows where literacy rate is missing or zero (if applicable)
 df_corr = df[(df['literacy_rate'] > 0) & (df['total_schools'] > 0)].copy()
